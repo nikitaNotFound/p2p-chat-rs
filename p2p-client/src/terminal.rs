@@ -3,7 +3,7 @@ use std::{io::{Stdout, stdout}, panic};
 use crossterm::{terminal::{EnterAlternateScreen, LeaveAlternateScreen}, event::{EnableMouseCapture, DisableMouseCapture}};
 use anyhow::Result;
 
-use crate::{terminal_event_handler::TerminalEventHandler, app::P2pChatApp, ui};
+use crate::{terminal_event_handler::TerminalEventHandler, app_context::P2pChatAppContext};
 
 pub type CrosstermTerminal = ratatui::Terminal<ratatui::backend::CrosstermBackend<Stdout>>;
 
@@ -36,7 +36,9 @@ impl P2pChatTerminal {
         Ok(())
     }
 
-    pub fn draw(&mut self, app: &mut P2pChatApp) -> Result<()> {
+    pub fn draw(&mut self, f: F) -> Result<()>
+        where
+    {
         self.terminal.draw(|frame| ui::render(app, frame))?;
         Ok(())
     }
