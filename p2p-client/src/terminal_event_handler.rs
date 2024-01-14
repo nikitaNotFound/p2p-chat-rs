@@ -10,9 +10,7 @@ pub enum TerminalEvent {
 }
 
 pub struct TerminalEventHandler {
-    sender: mpsc::Sender<TerminalEvent>,
     receiver: mpsc::Receiver<TerminalEvent>,
-    handler: JoinHandle<()>,
 }
 
 impl TerminalEventHandler {
@@ -20,12 +18,12 @@ impl TerminalEventHandler {
         let tick_rate = Duration::from_millis(tick_rate);
         let (sender, receiver) = mpsc::channel();
 
-        let handler = Self::generate_event_handler(tick_rate, sender.clone());
+        Self::spawn_event_handler(tick_rate, sender.clone());
 
-        Self {sender, receiver, handler}
+        Self {receiver}
     }
 
-    fn generate_event_handler(tick_rate: Duration, sender: mpsc::Sender<TerminalEvent>) -> JoinHandle<()> {
+    fn spawn_event_handler(tick_rate: Duration, sender: mpsc::Sender<TerminalEvent>) -> JoinHandle<()> {
         thread::spawn(move || {
             let mut last_tick = Instant::now();
             loop {
@@ -35,9 +33,9 @@ impl TerminalEventHandler {
                     match event::read().expect("unable to read event") {
                     CrosstermEvent::Key(e) => {
                         if e.kind == event::KeyEventKind::Press {
-                        sender.send(TerminalEvent::Key(e))
+                            sender.send(TerminalEvent::Key(e))
                         } else {
-                        Ok(()) // ignore KeyEventKind::Release on windows
+                            Ok(()) // ignore KeyEventKind::Release on windows
                         }
                     },
                     CrosstermEvent::Mouse(e) => sender.send(TerminalEvent::Mouse(e)),

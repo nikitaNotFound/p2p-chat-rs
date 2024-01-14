@@ -6,7 +6,7 @@ pub mod settings_tab;
 use crossterm::event::KeyEvent;
 use ratatui::Frame;
 
-use crate::app_context::P2pChatAppContext;
+use crate::app_context::AppContext;
 
 use self::{
     login_tab::LoginTab,
@@ -23,6 +23,6 @@ pub enum P2pChatTab {
 }
 
 pub trait AppTabHandler {
-    fn render(&self, app: &mut P2pChatAppContext, frame: &mut Frame);
-    fn handle_key_event(&self, app: &mut P2pChatAppContext, event: KeyEvent);
+    fn render(&self, app: &mut AppContext, frame: &mut Frame);
+    fn handle_key_event(&self, app: &mut AppContext, event: KeyEvent);
 }

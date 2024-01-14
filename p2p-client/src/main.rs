@@ -1,5 +1,5 @@
 
-use app_context::P2pChatAppContext;
+use app_context::AppContext;
 
 use ratatui::prelude::{CrosstermBackend, Terminal};
 use terminal::P2pChatTerminal;
@@ -13,20 +13,17 @@ mod terminal_event_handler;
 mod tabs;
 
 fn main() -> Result<()> {
-    let mut app_context = P2pChatAppContext::new();
+    let mut app_context = AppContext::new();
 
     let event_handler = TerminalEventHandler::new(60);
-    let mut chat_terminal = P2pChatTerminal::new(
-        Terminal::new(CrosstermBackend::new(stdout()))?,
-        event_handler,
-    );
+    let mut chat_terminal = P2pChatTerminal::new(Terminal::new(CrosstermBackend::new(stdout()))?);
 
     chat_terminal.enter()?;
     loop {
         chat_terminal.draw(&mut app_context)?;
 
-        match chat_terminal.event_handler.next()? {
-            TerminalEvent::Key(e) => event_binder::bind_key(&mut app_context, e),
+        match event_handler.next()? {
+            TerminalEvent::Key(e) => chat_terminal.handle_key_event(&mut app_context, e),
             _ => {},
         }
 
