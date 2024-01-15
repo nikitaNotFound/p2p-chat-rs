@@ -54,31 +54,21 @@ Temp profile - no data will be stored locally and no ability to recover after en
             layout[0],
         );
 
-        let control_layout = Layout::default()
-            .direction(Direction::Vertical)
-            .constraints(vec![
-                Constraint::Percentage(80),
-                Constraint::Percentage(20),
-            ])
-            .split(layout[1]);
-
-        frame.render_widget(
-            Block::default()
-                .title("Enter input mode (Press / to start and Esc to exit)")
-                .title_alignment(Alignment::Left)
-                .borders(Borders::ALL)
-                .border_type(BorderType::Rounded)
-                .style(Style::default().fg(Color::LightBlue)),
-                control_layout[0],
-        );
-
         frame.render_widget(
             Paragraph::new(Line::from(vec![
+                Span::styled(" N ", Style::default().fg(Color::White).bg(Color::LightYellow)),
+                Span::raw(" New profile "),
+                Span::styled(" L ", Style::default().fg(Color::White).bg(Color::LightYellow)),
+                Span::raw(" Login "),
+                Span::styled(" R ", Style::default().fg(Color::White).bg(Color::LightYellow)),
+                Span::raw(" Recover "),
+                Span::styled(" T ", Style::default().fg(Color::White).bg(Color::LightYellow)),
+                Span::raw(" Temp mode "),
                 Span::styled(" Esc ", Style::default().fg(Color::White).bg(Color::LightYellow)),
                 Span::raw(" Close app "),
             ]))
                 .alignment(Alignment::Center),
-            control_layout[1]
+            layout[1]
         );
     }
 
